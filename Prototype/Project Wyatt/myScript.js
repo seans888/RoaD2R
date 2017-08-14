@@ -12,37 +12,46 @@ function text(res) {
 	return res.text();
 }
 /**
- * Http request to fbserve.herokuapp.com.
+ * Http request to www.projectfib.com/verify.
  *
  * @param url to send to the server.
  * @param the type of information sent
  * @param the location to put the button
  */
-function httpGet(input, type, data) {
-
-	var server = "https://fbserve.herokuapp.com/";
+function httpGet(input, type, data, comments, likes) {
+  // This calls our backend API that simply returns text. We do not execute any code returned from this API
+	var server = "https://www.projectfib.com/verify";
 	var contents = "?content=";
 	var page = (type=="url")? decode(input) : input;
 	var theUrl = server + contents + page;
-	theUrl = theUrl.replace("&", "^");
+	theUrl = theUrl.replace("&", "^") + "&comments=" + comments + "&likes=" + likes;
 
 	//console.log("Type: " + type + " : " + page);
-
+  // This calls our backend API that simply returns text. We do not execute any code returned from this API
 	fetch(theUrl)
 		.then(text).then(function(text) {
 			var btn = document.createElement('div'),
 				button = Ladda.create(btn);
-			btn.style = "font-weight:bold; padding: 3px; position:absolute; top: 4px; right: 30px;background: #3b5998; font-size: 15px;";
-			if(text=="verified") {
+				btn.style = "font-weight:bold; padding: 3px; position:absolute; top: 4px; right: 30px;background: #3b5998; font-size: 15px;";
+			if (text=="verified") {
 				btn.innerHTML = "verified";
-				btn.style.color = "#D5F5E3";
-			} else {
+				btn.style.color = "#FFFFFF";
+				data.appendChild(btn);
+			} else if (text.includes("not verified")) {
 				btn.innerHTML = "not verified";
 				btn.style.color = "#E74C3C";
+				data.appendChild(btn);
 			}
-			data.appendChild(btn);
 		});
 
+}
+
+// This calls our backend API that simply returns text. We do not execute any code returned from this API
+function httpSend(data) {
+	var server = "https://www.projectfib.com/verify?content=";
+	var theURL = server + data;
+
+	fetch(theURL);
 }
 
 /**
@@ -76,45 +85,31 @@ function hoverTooltip(info) {
  * Parse through Facebook's encoded url for the actual url
  *
  */
-function parseUri(str) {
-  var o = parseUri.options,
-    m = o.parser[o.strictMode ? "strict" : "loose"].exec(str),
-    uri = {},
-    i = 14;
-
-  while (i--) uri[o.key[i]] = m[i] || "";
-
-  uri[o.q.name] = {};
-  uri[o.key[12]].replace(o.q.parser, function($0, $1, $2) {
-    if ($1) uri[o.q.name][$1] = $2;
-  });
-
-  return uri;
-};
-
-parseUri.options = {
-  strictMode: false,
-  key: ["source", "protocol", "authority", "userInfo", "user", "password", "host", "port", "relative", "path", "directory", "file", "query", "anchor"],
-  q: {
-    name: "queryKey",
-    parser: /(?:^|&)([^&=]*)=?([^&]*)/g
-  },
-  parser: {
-    strict: /^(?:([^:\/?#]+):)?(?:\/\/((?:(([^:@]*)(?::([^:@]*))?)?@)?([^:\/?#]*)(?::(\d*))?))?((((?:[^?#\/]*\/)*)([^?#]*))(?:\?([^#]*))?(?:#(.*))?)/,
-    loose: /^(?:(?![^:@]+:[^:@\/]*@)([^:\/?#.]+):)?(?:\/\/)?((?:(([^:@]*)(?::([^:@]*))?)?@)?([^:\/?#]*)(?::(\d*))?)(((\/(?:[^?#](?![^?#\/]*\.[^?#\/.]+(?:[?#]|$)))*\/?)?([^?#\/]*))(?:\?([^#]*))?(?:#(.*))?)/
-  }
-};
-
 function decode(code) {
- var url_obj = parseUri(code);
 
- if (url_obj.queryKey.u) {
-   return url_obj.queryKey.u;
- } else if (url_obj.host === 'www.facebook.com') {
-   return url_obj;
- } else {
-   return link;
- }
+	var res = "" + code;
+	res = res
+		.replace("http://l.facebook.com/l.php?u=", "")
+		.replace("https://l.facebook.com/l.php?u=", "")
+		.replace(/%3A/gi, ":")
+		.replace(/%F/gi, "/")
+		.replace(/%2F/gi, "/");
+
+	var end = res.substr(res.indexOf("^h"), res.length);
+	res = res.replace(end, "");
+	var end2 = res.substr(res.indexOf("&"), res.length);
+	res = res.replace(end2, "");
+
+	return res;
+}
+
+/*
+ * Get the number of Facebook likes
+ *
+ */
+function getLikes(string) {
+	return 1*(string.split(",").length) + 1*(string.includes("and")) +
+		   1*((string.match(/\d/g)).join(""));
 }
 
 /**
@@ -141,36 +136,55 @@ setInterval(function() {
 
 			var processed = false;
 
+			var comments = 0;
+
+			var hasComment = test[i].querySelector('._3b-9');
+			if(hasComment && hasComment.querySelector('div')) {
+				comments = Math.max(hasComment.querySelector('div').getElementsByClassName('UFIRow').length - 1, 0);
+				//httpSend(comments);
+			}
+
+			var likes = 0;
+
+			var hasLike = test[i].querySelector('._4arz')
+			if(hasLike && hasLike.innerHTML) {
+				var likePos = hasLike.innerHTML;
+				var likeStart = likePos.indexOf(">");
+				var likeString = likePos.substr(likeStart+1, likePos.indexOf("</")-likeStart-1)
+				likes = getLikes(likeString)
+				//httpSend(likes);
+			}
+
 			var linked = test[i].querySelector('._6ks');
 			if(!processed && linked != null && linked.querySelector('a') != null) {
 				processed = true;
-				httpGet(linked.querySelector('a').href, "url", data);
+				httpGet(linked.querySelector('a').href, "url", data, comments, likes);
 			}
 
 
 			var link = test[i].querySelector('._5pbx.userContent');
 			if(!processed && link != null && link.querySelector('a') != null && link.querySelector('a').href != null) {
 				processed = true;
-				httpGet(link.href, "url", data);
+				httpGet(link.href, "url", data, comments, likes);
 			}
 
 
 			var picComment = test[i].querySelector('.uiScaledImageContainer._4-ep');
 			if(!processed && picComment != null && picComment.querySelector('img') != undefined && picComment.querySelector('img').src != null) {
 				processed = true;
-				httpGet(picComment.querySelector('img').src, "image", data);
+				httpGet(picComment.querySelector('img').src, "image", data, comments, likes);
 			}
 
 			var picPost = test[i].querySelector('._46-h._517g');
 			if(!processed && picPost != null && picPost.querySelector('img') != undefined && picPost.querySelector('img').src != null) {
 				processed = true;
-				httpGet(picPost.querySelector('img').src, "image", data);
+				httpGet(picPost.querySelector('img').src, "image", data, comments, likes);
 			}
 
 			var picTagged = test[i].querySelector('._4-eo._2t9n');
 			if(!processed && picTagged != null && picTagged.querySelector('._46-h._4-ep') != null && picTagged.querySelector('._46-h._4-ep').querySelector('img') != null) {
 				processed = true;
-				httpGet(picTagged.querySelector('._46-h._4-ep').querySelector('img').src, "image", data);
+				httpGet(picTagged.querySelector('._46-h._4-ep').querySelector('img').src, "image", data, comments, likes);
 			}
 
 			/*
@@ -185,7 +199,7 @@ setInterval(function() {
 			var text = test[i].querySelector('._5pbx.userContent');
 			if(!processed && text != null && text.textContent != null) {
 				processed = true;
-				httpGet(text.textContent, "text", data);
+				httpGet(text.textContent, "text", data, comments, likes);
 			}
 
 		}
