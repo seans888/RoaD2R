@@ -11,6 +11,9 @@
       "js": ["jquery.js", "content.js"]
     }
   ],
+    "permissions": [
+   "tabs"
+   ],
   "icons":{
     "64" : "proof.png"
     },
