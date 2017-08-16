@@ -6,6 +6,13 @@ $(document).on("click", "a", function() {
     	}*/
     if(href.search("news.abs-cbn"||"gmanetwork") !== -1){
     	alert("This website is authentic");
+}
+    	if (href.indexOf("gmanetwork") !== -1){
+    		alert("Accessing GMA News");
+    	}
+    if(href.search("news.abs-cbn") !== -1){
+    	alert("Accessing ABS-CBN News");
+
     }
 });
 
