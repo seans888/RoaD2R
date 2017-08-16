@@ -1,18 +1,21 @@
+
 $(document).on("click", "a", function() {
-   	//this == the link that was clicked
    	   var href = $(this).attr("href");
-    	/*if (href.indexOf("gmanetwork") !== -1){
-    		alert("Accessing Gma");
-    	}*/
-    if(href.search("news.abs-cbn"||"gmanetwork") !== -1){
+    if(href.search("gmanetwork|news.abs-cbn.com") !== -1){
     	alert("This website is authentic");
 }
-    	if (href.indexOf("gmanetwork") !== -1){
-    		alert("Accessing GMA News");
-    	}
-    if(href.search("news.abs-cbn") !== -1){
-    	alert("Accessing ABS-CBN News");
+else{
+	alert("This website is fake")
+}
+})
 
-    }
-});
+
+window.indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;
+ 
+window.IDBTransaction = window.IDBTransaction || window.webkitIDBTransaction || window.msIDBTransaction;
+window.IDBKeyRange = window.IDBKeyRange || window.webkitIDBKeyRange || window.msIDBKeyRange
+ 
+if (!window.indexedDB) {
+   window.alert("Your browser doesn't support a stable version of IndexedDB.")
+}
 
