@@ -12,7 +12,8 @@
     }
   ],
     "permissions": [
-   "tabs"
+   "tabs",
+   "storage"
    ],
   "icons":{
     "64" : "proof.png"
