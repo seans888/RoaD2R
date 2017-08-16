@@ -1,4 +1,3 @@
-//alert("updatezsdxx")
 $(document).on("click", "a", function() {
    	//this == the link that was clicked
    	   var href = $(this).attr("href");
