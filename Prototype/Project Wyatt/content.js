@@ -27,3 +27,7 @@ else{
 	window.alert("Database is supported in this browser");
 }
 
+// Let us open our database
+var request = window.indexedDB.open("MyTestDatabase", 3);
+
+https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API/Using_IndexedDB
