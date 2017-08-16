@@ -21,10 +21,7 @@
   "default_icon": "proof.png",
   "default_popup": "popup.html"
 
-  "version": "1",
-  "permissions": [
-    "http://localhost/*"
-  ]
+
 
 }
 }
