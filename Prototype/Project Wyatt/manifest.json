@@ -1,0 +1,24 @@
+{
+  "manifest_version": 2,
+  "name": "identiFake",
+  "description":"This extension identifies fake news in facebook",
+  "version": "0.1",
+  "content_scripts": [
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": ["jquery.js", "content.js"]
+    }
+  ],
+    "permissions": [
+   "tabs"
+   ],
+  "icons":{
+    "64" : "proof.png"
+    },
+  "browser_action": {
+  "default_icon": "proof.png",
+  "default_popup": "popup.html"
+}
+}
