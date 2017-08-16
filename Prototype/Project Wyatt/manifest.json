@@ -18,6 +18,7 @@
     "64" : "proof.png"
     },
   "browser_action": {
-  "default_icon": "proof.png"
+  "default_icon": "proof.png",
+  "default_popup": "popup.html"
 }
 }

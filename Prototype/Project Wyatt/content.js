@@ -5,7 +5,8 @@ $(document).on("click", "a", function() {
     	if (href.indexOf("gmanetwork") !== -1){
     		alert("Accessing Gma");
     	}
-    if(href.indexOf("news.abs-cbn") !== -1){
+    if(href.search("news.abs-cbn") !== -1){
     	alert("Accessing abs-cbn");
     }
 });
+
