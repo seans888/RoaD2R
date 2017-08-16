@@ -13,7 +13,7 @@
   ],
     "permissions": [
    "tabs",
-   "storage"
+   "unlimitedStorage"
    ],
   "icons":{
     "64" : "proof.png"
