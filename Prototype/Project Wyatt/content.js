@@ -13,7 +13,10 @@ $(document).on("click", "a", function() {
         if(href.search("news.abs-cbn") !== -1){
         alert("Accessing ABS-CBN News");
 
+    }
 
+    if (http.search("adobochronicles") !== -1) {
+        alert("This site is found to be Fake!");
     }
 
 
