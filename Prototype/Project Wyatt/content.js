@@ -3,13 +3,12 @@ $(document).on("click", "a", function() {
    	   var href = $(this).attr("href");
     if(href.search("gmanetwork|news.abs-cbn.com") !== -1){
     	alert("This website is authentic");
-<<<<<<< HEAD
 }
 else{
 	alert("This website is fake")
 }
 })
-=======
+
 
         if (href.indexOf("gmanetwork") !== -1){
             alert("Accessing GMA News");
@@ -25,7 +24,6 @@ else{
 
 
     
->>>>>>> faa93a0a36ffbcab6c9f94d6f9c7ac4a2c4a2a77
 
 
 window.indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;
