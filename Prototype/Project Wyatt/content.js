@@ -7,6 +7,10 @@ $(document).on("click", "a", function() {
 	if(href.search("adobochronicles") !== -1){
 		alert("This website is FAKE!");
 	}
+	if(href.search("the philippinetrend.com") !== -1){
+		alert("This website is FAKE!");
+	}
+	
 /*
 else{
 	alert("This website is fake")
