@@ -27,3 +27,4 @@ else{
 	window.alert("Database is supported in this browser");
 }
 
+	
